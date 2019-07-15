@@ -51,6 +51,7 @@ public class DungeonGenerator : MonoBehaviour
 
     class Room
     {
+        
         public int roomWidth;
         public int roomHeight;
         public int posX;
