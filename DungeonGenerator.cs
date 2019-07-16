@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using System;
 public class DungeonGenerator : MonoBehaviour
 {
     List<Room> map;
@@ -10,6 +10,12 @@ public class DungeonGenerator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        GenerateDungeon();
+    }
+
+    void Update()
+    {
+        if (Input.GetMouseButtonDown(0))
         GenerateDungeon();
     }
 
@@ -23,27 +29,44 @@ public class DungeonGenerator : MonoBehaviour
     {
         for(int i = 0; i < RoomNum; i++)
         {
-            int randWidth = (int) Random.Range(3.0f, 9.0f);
-            int randHeigh = (int) Random.Range(3.0f, 9.0f);
-            Debug.Log(randWidth);
-            Debug.Log(randHeigh);
-            Room room = new Room(2,2,randWidth, randHeigh);
+            int randWidth = (int) UnityEngine.Random.Range(3.0f, 9.0f);
+            int randHeigh = (int) UnityEngine.Random.Range(3.0f, 9.0f);
+            //Debug.Log(randWidth);
+            //Debug.Log(randHeigh);
+            int[] pos = getRandomPointInCircle();
+            Room room = new Room(pos[0],pos[1],randWidth, randHeigh);
             map.Add(room);
         }
     }
 
+    int[] getRandomPointInCircle()
+    {
+
+        int[] aux = new int[2];
+        float radius = 20;
+        //float r = radius*Mathf.Sqrt(UnityEngine.Random.Range(0.0f,1.0f));
+        //float point = ((2/(radius*radius))*r);
+        float theta = (float)(2*Mathf.PI*UnityEngine.Random.Range(0.0f,1.0f));
+        float r = (radius * Mathf.Sqrt(UnityEngine.Random.Range(0.0f,1.0f))); 
+        int x = (int)(r*Mathf.Cos(theta));
+        int y = (int)(r*Mathf.Sin(theta));
+        aux[0] = x;
+        aux[1] = y;
+            Debug.Log(aux[0]);
+            Debug.Log(aux[1]);
+        return aux;
+    }
+
     void OnDrawGizmos() 
     {	
-        int count = 0;
         if(map != null)	
         {
             foreach(Room rooms in map)
             {
                 
                 Gizmos.color = Color.grey;
-		        Vector3 pos = new Vector3(count*count,0,count*count);
+		        Vector3 pos = new Vector3(rooms.posX,0,rooms.posY);
 		        Gizmos.DrawCube(pos, new Vector3(rooms.roomWidth,0,rooms.roomHeight));
-                count++;
             }
         }
 	}
